@@ -18,6 +18,11 @@ from jwt.v2.user_claims import UserClaims
 JWT = t.Annotated[str, "Json Web Token"]
 
 
+class MissingAttribute(Exception):
+    """ Exception raised when a required attribute is missing. """
+    pass
+
+
 def init_new_operator(name: str) -> tuple[KeyPair, str]:
     """ Create a new operator by its name.
 
@@ -163,7 +168,7 @@ class Snippet(ABC, t.Generic[AnyClaims]):
             JWT of the entity
         """
         if self.claims is None:
-            raise Exception("Claims not set")
+            raise MissingAttribute("claims")
         return self.claims.encode(self.key_pair)
 
 
@@ -294,9 +299,9 @@ class Account(Snippet, Verifier):
     def jwt(self) -> JWT:
         """ Return a JWT of the user """
         if self.claims is None:
-            raise Exception("Claims not set")
+            raise MissingAttribute("claims")
         if self._skp is None:
-            raise Exception("Signer key pair not set. There is no one to sign my jwt :(")
+            raise MissingAttribute("signer key pair (_skp).")
         return self.claims.encode(self._skp)
 
 
@@ -345,8 +350,8 @@ class User(Snippet):
     def jwt(self) -> JWT:
         """ Return a JWT of the user """
         if self.claims is None:
-            raise Exception("Claims not set")
+            raise MissingAttribute("claims")
         if self._skp is None:
-            raise Exception("Signer key pair not set. There is no one to sign my jwt :(")
+            raise MissingAttribute("Signer key pair(_skp).")
         self.claims: UserClaims
         return self.claims.encode(self._skp)
