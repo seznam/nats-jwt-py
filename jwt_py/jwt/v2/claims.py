@@ -26,12 +26,12 @@ OperatorClaim: Final[ClaimType] = "operator"
 AccountClaim: Final[ClaimType] = "account"
 # UserClaim is the type of an user JWT
 UserClaim: Final[ClaimType] = "user"
-# ActivationClaim is the type of an activation JWT
-ActivationClaim: Final[ClaimType] = "activation"
-# AuthorizationRequestClaim is the type of an auth request claim JWT
-AuthorizationRequestClaim: Final[ClaimType] = "authorization_request"
-# AuthorizationResponseClaim is the response for an auth request
-AuthorizationResponseClaim: Final[ClaimType] = "authorization_response"
+# [not supported] ActivationClaim is the type of an activation JWT
+# ActivationClaim: Final[ClaimType] = "activation"
+# [not supported] AuthorizationRequestClaim is the type of an auth request claim JWT
+# AuthorizationRequestClaim: Final[ClaimType] = "authorization_request"
+# [not supported] AuthorizationResponseClaim is the response for an auth request
+# AuthorizationResponseClaim: Final[ClaimType] = "authorization_response"
 # GenericClaim is a type that doesn't match Operator/Account/User/ActionClaim
 GenericClaim: Final[ClaimType] = "generic"
 
@@ -88,7 +88,7 @@ class Claims(Protocol):
 
     def expected_prefixes(self) -> list[PrefixByte]: ...
 
-    def payload(self) -> Any: ...  # TODO: change Any
+    def payload(self) -> Any: ...
 
     def validate(self, vr: "ValidationResults") -> None: ...
 
@@ -182,39 +182,12 @@ class ClaimsData(Claims):
         if claim is None:
             raise ValueError("claim is required")
 
-        # if self != claim.claims():  # TODO: check if self should be in claim.claims()
-        #    raise ValueError("claim and claim data do not match")
-
         if self.sub == "":
             raise ValueError("subject is not set")
 
         h: bytes = serialize(header)
 
         issuer_bytes: bytes = kp.public_key
-        prefixes: list[bytes] = claim.expected_prefixes()
-
-        if prefixes and False:
-            # This code is not reachable in python
-
-            # TODO: verify prefixes and remove False from if-statement above
-
-            # python-nkeys has no alternatives for `IsValidPublic{Operator,Account,Server,...}Key`
-            #   code should be written manually
-            _validators = {
-                nkeys.PREFIX_BYTE_ACCOUNT: lambda x: None,
-                nkeys.PREFIX_BYTE_USER: lambda x: None,
-                nkeys.PREFIX_BYTE_OPERATOR: lambda x: None,
-                nkeys.PREFIX_BYTE_SERVER: lambda x: None,
-                nkeys.PREFIX_BYTE_CLUSTER: lambda x: None,
-            }
-
-            if any(
-                    # validator should return True, so we negate it, to get True in case of invalid prefix
-                    # therefore, not valid prefix will cause any() to return True
-                    not _validators.get(prefix, lambda x: False)(issuer_bytes)
-                    for prefix in prefixes
-            ):
-                raise ValueError(f"unable to validate expected prefixes - {prefixes}")
 
         self.iss = issuer_bytes.decode()
         self.iat = int(time.time())
@@ -233,8 +206,6 @@ class ClaimsData(Claims):
 
         if header.alg != AlgorithmNkey:
             raise ValueError(f"{header.alg} not supported to write jwtV2")
-
-        # header.alg == AlgorithmNkey
 
         # sign the payload
         sign: bytes = kp.sign(to_sign)
@@ -332,12 +303,3 @@ class ClaimsData(Claims):
 
     def update_version(self) -> None:
         self.nats.version = LIB_VERSION
-
-
-@dataclass(frozen=True)
-class Prefix:
-    """ Prefix holds the prefix byte for an NKey
-    """
-    byte: PrefixByte
-
-# encodeToString and decodeString are omitted

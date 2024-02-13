@@ -6,14 +6,11 @@ from dataclasses_json import config, dataclass_json
 from nkeys import nkeys
 
 from jwt.nkeys_ext import Decode
-from jwt.v2.activation_claims import ActivationClaims
 from jwt.v2.claims import _claim_data_config, AccountClaim, Claims, ClaimsData, GenericFields
 from jwt.v2.common import NoLimit
-from jwt.v2.exports import Export
-from jwt.v2.imports import Import
 from jwt.v2.revocation_list import RevocationList
 from jwt.v2.signing_keys import SigningKeys
-from jwt.v2.types import Info, NatsLimits, Permissions, Subject
+from jwt.v2.types import Limits, Permissions
 from jwt.v2.validation import ValidationResults
 
 if TYPE_CHECKING:
@@ -106,7 +103,7 @@ JetStreamTieredLimits_T = dict[str, JetStreamLimits]
 
 @dataclass_json
 @dataclass()
-class OperatorLimits(NatsLimits, AccountLimits, JetStreamLimits):
+class OperatorLimits(Limits, AccountLimits, JetStreamLimits):
     tiered_limits: JetStreamTieredLimits_T = field(default_factory=dict, metadata=config(exclude=lambda _: True))
 
     def __getitem__(self, item: str) -> JetStreamLimits:
@@ -130,7 +127,7 @@ class OperatorLimits(NatsLimits, AccountLimits, JetStreamLimits):
         :return: True if all limits are set to unlimited
         """
         return (
-                super(NatsLimits).is_unlimited()
+                super(Limits).is_unlimited()
                 and super(AccountLimits).is_unlimited()
                 and super(JetStreamLimits).is_unlimited()
                 and len(self.tiered_limits) == 0
@@ -150,89 +147,19 @@ class OperatorLimits(NatsLimits, AccountLimits, JetStreamLimits):
         return not self.is_empty()
 
 
-@dataclass(frozen=True)
-class WeightedMapping:
-    subject: Subject
-    weight: int = None
-    cluster: str = None
-
-    def get_weight(self) -> int:
-        if self.weight == 0:
-            return 100
-        return self.weight
-
-
-class Mapping(dict[Subject, list[WeightedMapping]]):
-    def validate(self, vr: ValidationResults):
-        for ub_from, wm in self.items():
-            ub_from.validate(vr)
-            total = 0
-            for _wm in wm:
-                _wm.subject.validate(vr)
-                total += _wm.get_weight()
-            if total > 100:
-                vr.add(f"Mapping \"{ub_from}\" exceeds 100% among all of it's weighted to mappings", level="e")
-
-    def add_mapping(self, sub: Subject, to: list[WeightedMapping]):
-        self[sub] = to
-
-
-@dataclass(frozen=True)
-class ExternalAuthorization:
-    """ Enable external authorization for account users.
-    AuthUsers are those users specified to bypass the
-        authorization callout and should be used for the authorization service itself.
-    AllowedAccounts specifies which accounts, if any, that the authorization service can bind an authorized user to.
-    The authorization response, a user JWT, will still need to be signed by the correct account.
-
-    If optional XKey is specified, that is the public xkey (x25519) and the server will encrypt the request such that
-        only the holder of the private key can decrypt.
-
-    The auth service can also optionally encrypt the response back to the server using it's public xkey
-        which will be in the authorization request.
-    """
-    auth_users: list[str] | None = None
-    allowed_accounts: list[str] | None = field(default_factory=list, metadata=_claim_data_config)
-    xkey: str | None = field(default=None, metadata=_claim_data_config)
-
-    def is_enabled(self) -> bool:
-        return len(self.auth_users) > 0
-
-    def validate(self, vr: ValidationResults) -> None:
-        if len(self.allowed_accounts) > 0 and len(self.auth_users) == 0:
-            vr.add("External authorization cannot have accounts without users specified")
-
-        for user in self.auth_users:
-            try:
-                Decode(nkeys.PREFIX_BYTE_USER, user.encode())
-            except ValueError:
-                vr.add(f"AuthUser {user} is not a valid user public key")
-
-
 @dataclass_json
 @dataclass
 class Account(GenericFields):
     """ Account holds account-specific claims data
     """
-    imports: list[Import] = field(default_factory=list, metadata=_claim_data_config)
-    exports: list[Export] = field(default_factory=list, metadata=_claim_data_config)
     limits: OperatorLimits = field(default_factory=OperatorLimits, metadata=_claim_data_config)
     signing_keys: SigningKeys = field(default_factory=SigningKeys, metadata=_claim_data_config)
     revocations: RevocationList = field(default_factory=RevocationList, metadata=_claim_data_config)
     default_permissions: Permissions = field(default_factory=Permissions, metadata=_claim_data_config)
-    mappings: Mapping = field(default_factory=Mapping, metadata=_claim_data_config)
-    authorization: ExternalAuthorization = field(default_factory=ExternalAuthorization, metadata=_claim_data_config)
-    info: Info = field(default_factory=Info, metadata=_claim_data_config)
 
-    def validate(self, acct: "AccountClaims", vr: ValidationResults) -> None:
-        for imp in self.imports:
-            imp.validate(acct.sub, vr)
-        for exp in self.exports:
-            Subject(exp).validate(vr)
+    def validate(self, vr: ValidationResults) -> None:
         self.limits.validate(vr)
         self.default_permissions.validate(vr)
-        self.mappings.validate(vr)
-        self.authorization.validate(vr)
 
 
 @dataclass_json
@@ -244,18 +171,7 @@ class AccountClaims(ClaimsData):
         if self.sub == "":
             raise ValueError("subject is required")
 
-        if isinstance(self.nats, dict):
-            self.nats = Account(**self.nats)
-
         self.nats.signing_keys = SigningKeys()
-
-        limits: OperatorLimits = self.nats.limits
-        limits.nats_limits = NatsLimits()
-        limits.account_limits = AccountLimits()
-        limits.jetstream_limits = JetStreamLimits()
-        limits.tiered_limits = {}
-
-        self.mappings = Mapping()
 
     def encode(self, pair: nkeys.KeyPair) -> str:  # noqa
         """
@@ -274,7 +190,7 @@ class AccountClaims(ClaimsData):
 
     def validate(self, vr: ValidationResults):
         super().validate(vr)
-        self.nats.validate(self, vr)
+        self.nats.validate(vr)
 
         Decode(nkeys.PREFIX_BYTE_ACCOUNT, self.sub.encode())  # throws ValueError
 
@@ -297,7 +213,7 @@ class AccountClaims(ClaimsData):
         if iss == self.sub:
             return True
 
-        if isinstance(c, (UserClaims, ActivationClaims)):
+        if isinstance(c, UserClaims):
             return iss in self.nats.signing_keys
 
     def revoke_at(self, pub_key: str, timestamp: datetime) -> None:

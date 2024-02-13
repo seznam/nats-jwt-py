@@ -352,6 +352,6 @@ class User(Snippet):
         if self.claims is None:
             raise MissingAttribute("claims")
         if self._skp is None:
-            raise MissingAttribute("Signer key pair(_skp).")
+            raise MissingAttribute("signer key pair(_skp).")
         self.claims: UserClaims
         return self.claims.encode(self._skp)

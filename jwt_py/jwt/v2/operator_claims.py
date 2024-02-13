@@ -58,13 +58,10 @@ class Operator(GenericFields):
     def validate_account_service_url(v) -> str | None:
         if v == "":
             return None
-        # TODO: parse url
 
     def validate_account_server_url(self) -> str | None:
         if self.account_server_url == "":
-            return None
-
-        # TODO: parse url
+            return "account server url is required"
 
     def validate_account_service_urls(self) -> Generator[str, None, None]:
         for i, v in enumerate(self.operator_service_urls):
@@ -96,10 +93,6 @@ class OperatorClaims(ClaimsData):
 
     def encode(self, pair: nkeys.KeyPair) -> str:  # noqa
         Decode(nkeys.PREFIX_BYTE_OPERATOR, pair.public_key)  # throws ValueError
-
-        err = self.nats.validate_account_server_url()
-        if err:
-            raise ValueError(err)
 
         self.nats.type = OperatorClaim
         return super().encode(pair, self)

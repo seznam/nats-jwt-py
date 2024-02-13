@@ -5,7 +5,7 @@ import nkeys.nkeys
 
 from jwt.nkeys_ext import Decode
 from jwt.v2.claims import _claim_data_config, ClaimsData, GenericFields, PrefixByte, UserClaim
-from jwt.v2.types import Limits, Permissions, UserLimits
+from jwt.v2.types import Limits, Permissions
 from jwt.v2.validation import ValidationResults
 
 ConnectionTypeStandard: Final[str] = "STANDARD"
@@ -28,9 +28,6 @@ class UserPermissionLimits(Permissions, Limits):
             pub=self.pub,
             sub=self.sub,
             resp=self.resp,
-            src=self.src,
-            times=self.times,
-            locale=self.locale,
             subs=self.subs,
             data=self.data,
             payload=self.payload
@@ -52,7 +49,6 @@ class User(GenericFields, _User):
 
     def validate(self, vr: ValidationResults) -> None:
         self.as_permissions().validate(vr)
-        self.as_limits().validate(vr)
 
 
 @dataclass
@@ -60,20 +56,12 @@ class UserClaims(ClaimsData):
     nats: User = field(default_factory=User)
 
     def __post_init__(self):
-        from jwt.v2.account_claims import NatsLimits
+        from jwt.v2.account_claims import Limits
 
         if self.sub == "":
             raise ValueError("subject is required")
 
-        self.nats.user_limits = UserLimits()
-        self.nats.nats_limits = NatsLimits()
-
-    def set_scoped(self, t: bool) -> None:
-        if t:
-            self.nats.user_permissions_limits = UserPermissionLimits()
-        else:
-            self.nats.user_limits = UserLimits()
-            self.nats.nats_limits = UserLimits()
+        self.nats.nats_limits = Limits()
 
     def has_empty_permissions(self) -> bool:
         return self.nats.as_user_permission_limits() == UserPermissionLimits()
@@ -106,6 +94,3 @@ class UserClaims(ClaimsData):
 
     def is_bearer_token(self) -> bool:
         return self.nats.bearer_token
-
-    def get_tags(self) -> list[str]:
-        return self.nats.tags

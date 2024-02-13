@@ -5,7 +5,7 @@ description = "JWT tokens signed using NKeys for Ed25519 for the Python3 ecosyst
 authors = ["pomo <mark.barzali@firma.seznam.cz>"]
 license = "Apache-2.0 license"
 readme = "README.md"
-packages = [{include = "jwt"}]
+packages = [{include = "jwt_py"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"

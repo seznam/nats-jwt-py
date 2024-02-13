@@ -1,13 +1,11 @@
-import base64
 import json
 from dataclasses import dataclass
 
 from jwt.v2.version import LIB_VERSION
 from jwt.v2.account_claims import AccountClaims
-from jwt.v2.claims import AccountClaim, ActivationClaim, AuthorizationRequestClaim, AuthorizationResponseClaim, \
-    Claims, ClaimsData, ClaimType, \
-    GenericFields, OperatorClaim, \
-    PrefixByte, safe_url_base64_decode, UserClaim
+from jwt.v2.claims import (
+    AccountClaim, Claims, ClaimsData, ClaimType, GenericFields, OperatorClaim, safe_url_base64_decode, UserClaim
+)
 from jwt.v2.header import parse_headers
 from jwt.v2.operator_claims import OperatorClaims
 from jwt.v2.user_claims import UserClaims
@@ -43,15 +41,9 @@ def load_claims(data: bytearray | bytes | str) -> tuple[int, Claims]:
         raise ValueError(f"{claims} are not supported")
 
     return _id.version(), {
-        # TODO: add all claims
-        # Note: claims using `classmethod`, it refers to same function, but it receives different
-        # class as first argument
         OperatorClaim: OperatorClaims.load,
         AccountClaim: AccountClaims.load,
         UserClaim: UserClaims.load,
-        ActivationClaim: lambda x, y: ...,
-        AuthorizationRequestClaim: lambda x, y: ...,
-        AuthorizationResponseClaim: lambda x, y: ...,
         "cluster": lambda x, y: error("ClusterClaims"),
         "server": lambda x, y: error("ServerClaims"),
     }.get(
@@ -92,10 +84,5 @@ def decode(token: str) -> Claims:
         raise ValueError("claim failed V1 signature verification")
     elif claim.verify(token[:len(chunks[0]) + len(chunks[1]) + 1].encode(), sig):
         raise ValueError("claim failed V2 signature verification")
-
-    prefixes: list[PrefixByte] = claim.expected_prefixes()
-
-    if prefixes:
-        ...  # TODO: create validation for prefixes
 
     return claim
