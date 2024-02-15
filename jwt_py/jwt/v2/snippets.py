@@ -82,7 +82,7 @@ class Snippet(ABC, t.Generic[AnyClaims]):
 
     """
     key_pair: KeyPair
-    seed_getter: t.Callable[[str], bytes | str] = None
+    seed_getter: t.Callable[[str | None], bytes | str] = None
 
     @property
     @abstractmethod
