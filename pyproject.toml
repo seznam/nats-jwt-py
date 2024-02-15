@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "jwt-py"
+name = "nats-jwt"
 version = "0.1.0"
 description = "JWT tokens signed using NKeys for Ed25519 for the Python3 ecosystem"
 authors = ["pomo <mark.barzali@firma.seznam.cz>"]
@@ -10,9 +10,9 @@ packages = [{include = "jwt_py"}]
 [tool.poetry.dependencies]
 python = "^3.9"
 nkeys = "^0.1.0"
-pycryptodome = "^3.19.0"
-pytz = "^2023.3.post1"
-dataclasses-json = "^0.6.3"
+pycryptodome = "^3.20.0"
+pytz = "^2024.1"
+dataclasses-json = "^0.6.4"
 dacite = "^1.8.1"
 
 
