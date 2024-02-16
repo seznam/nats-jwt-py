@@ -29,3 +29,8 @@ tag_format = "v$version"
 bump_message = "🔖 version $current_version → $new_version [release]"
 update_changelog_on_bump = true
 annotated_tag = true
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.3"
+coverage = { version = "^7.3.2", extras = ["toml"] }
+swiftmock = "^0.0.1"
