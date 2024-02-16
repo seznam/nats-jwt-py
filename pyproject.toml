@@ -15,7 +15,17 @@ pytz = "^2024.1"
 dataclasses-json = "^0.6.4"
 dacite = "^1.8.1"
 
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.commitizen.dependencies]
+commitizen = "^3.6.0"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version_provider = "poetry"
+tag_format = "v$version"
+bump_message = "🔖 version $current_version → $new_version [release]"
+update_changelog_on_bump = true
+annotated_tag = true
