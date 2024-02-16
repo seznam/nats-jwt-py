@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """ Snippets are created to make it easier to work with JWTs.
 
 Snippets help with creating, verifying and signing JWTs for NATS.
