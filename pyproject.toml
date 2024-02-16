@@ -31,6 +31,7 @@ update_changelog_on_bump = true
 annotated_tag = true
 
 
+
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.3"
 coverage = { version = "^7.3.2", extras = ["toml"] }
