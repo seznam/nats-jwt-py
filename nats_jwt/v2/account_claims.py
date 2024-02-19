@@ -7,16 +7,16 @@ from typing import Final, TYPE_CHECKING
 from dataclasses_json import config, dataclass_json
 from nkeys import nkeys
 
-from jwt.nkeys_ext import Decode
-from jwt.v2.claims import _claim_data_config, AccountClaim, Claims, ClaimsData, GenericFields
-from jwt.v2.common import NoLimit
-from jwt.v2.revocation_list import RevocationList
-from jwt.v2.signing_keys import SigningKeys
-from jwt.v2.types import Limits, Permissions
-from jwt.v2.validation import ValidationResults
+from nats_jwt.nkeys_ext import Decode
+from nats_jwt.v2.claims import _claim_data_config, AccountClaim, Claims, ClaimsData, GenericFields
+from nats_jwt.v2.common import NoLimit
+from nats_jwt.v2.revocation_list import RevocationList
+from nats_jwt.v2.signing_keys import SigningKeys
+from nats_jwt.v2.types import Limits, Permissions
+from nats_jwt.v2.validation import ValidationResults
 
 if TYPE_CHECKING:
-    from jwt.v2.user_claims import UserClaims
+    from nats_jwt.v2.user_claims import UserClaims
 
 AnyAccount: Final[str] = "*"
 
@@ -206,7 +206,7 @@ class AccountClaims(ClaimsData):
         return self.tags
 
     def did_sign(self, c: Claims) -> bool:
-        from jwt.v2.user_claims import UserClaims
+        from nats_jwt.v2.user_claims import UserClaims
 
         if c is None:
             return False

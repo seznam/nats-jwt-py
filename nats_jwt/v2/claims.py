@@ -12,10 +12,10 @@ from Crypto.Hash import SHA512
 from dataclasses_json import config, dataclass_json
 from nkeys import ErrInvalidSignature
 
-from jwt.nkeys_ext import keypair_from_pubkey
-from jwt.v2.version import LIB_VERSION
-from jwt.v2.header import AlgorithmNkey, AlgorithmNkeyOld, Header, TokenTypeJwt
-from jwt.v2.validation import ValidationResults
+from nats_jwt.nkeys_ext import keypair_from_pubkey
+from nats_jwt.v2.version import LIB_VERSION
+from nats_jwt.v2.header import AlgorithmNkey, AlgorithmNkeyOld, Header, TokenTypeJwt
+from nats_jwt.v2.validation import ValidationResults
 
 if TYPE_CHECKING:
     from Crypto.Hash.SHA512 import SHA512Hash
@@ -295,7 +295,7 @@ class ClaimsData(Claims):
         Returns:
             Claims: decoded claims based on class calling this method
         """
-        from jwt.v2.decoder import decode
+        from nats_jwt.v2.decoder import decode
 
         claims: Claims = decode(token)
         if not isinstance(claims, cls):

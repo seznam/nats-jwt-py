@@ -10,7 +10,7 @@ from ed25519 import VerifyingKey
 from nkeys import crc16
 
 if typing.TYPE_CHECKING:
-    from jwt.v2.claims import PrefixByte
+    from nats_jwt.v2.claims import PrefixByte
 
 
 def correct_padding(src: bytes) -> bytes:

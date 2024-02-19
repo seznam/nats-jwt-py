@@ -5,10 +5,10 @@ from typing import Final
 
 import nkeys.nkeys
 
-from jwt.nkeys_ext import Decode
-from jwt.v2.claims import _claim_data_config, ClaimsData, GenericFields, PrefixByte, UserClaim
-from jwt.v2.types import Limits, Permissions
-from jwt.v2.validation import ValidationResults
+from nats_jwt.nkeys_ext import Decode
+from nats_jwt.v2.claims import _claim_data_config, ClaimsData, GenericFields, PrefixByte, UserClaim
+from nats_jwt.v2.types import Limits, Permissions
+from nats_jwt.v2.validation import ValidationResults
 
 ConnectionTypeStandard: Final[str] = "STANDARD"
 ConnectionTypeWebsocket: Final[str] = "WEBSOCKET"
@@ -58,7 +58,7 @@ class UserClaims(ClaimsData):
     nats: User = field(default_factory=User)
 
     def __post_init__(self):
-        from jwt.v2.account_claims import Limits
+        from nats_jwt.v2.account_claims import Limits
 
         if self.sub == "":
             raise ValueError("subject is required")

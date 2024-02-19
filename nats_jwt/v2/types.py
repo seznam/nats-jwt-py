@@ -7,12 +7,12 @@ from typing import Final, TYPE_CHECKING
 
 import pytz
 
-from jwt.v2.claims import _claim_data_config
-from jwt.v2.common import NoLimit
+from nats_jwt.v2.claims import _claim_data_config
+from nats_jwt.v2.common import NoLimit
 
 if TYPE_CHECKING:
-    from jwt.v2.account_claims import NatsLimits
-    from jwt.v2.validation import ValidationResults
+    from nats_jwt.v2.account_claims import NatsLimits
+    from nats_jwt.v2.validation import ValidationResults
 
 MaxInfoLength: Final[int] = 8 * 1024
 

@@ -2,7 +2,7 @@ import os
 import unittest
 from typing import Final
 
-from jwt.v2.snippets import Operator, Account, User
+from nats_jwt.v2.snippets import Operator, Account, User
 
 # get a file path
 assets = os.path.join(os.path.dirname(__file__), "assets")

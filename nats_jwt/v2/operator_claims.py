@@ -6,10 +6,10 @@ from typing import Generator
 import nkeys
 from dataclasses_json import dataclass_json
 
-from jwt.nkeys_ext import Decode
-from jwt.v2.version import LIB_VERSION
-from jwt.v2.claims import _claim_data_config, Claims, ClaimsData, GenericFields, OperatorClaim
-from jwt.v2.validation import ValidationResults
+from nats_jwt.nkeys_ext import Decode
+from nats_jwt.v2.version import LIB_VERSION
+from nats_jwt.v2.claims import _claim_data_config, Claims, ClaimsData, GenericFields, OperatorClaim
+from nats_jwt.v2.validation import ValidationResults
 
 
 def parse_version(version: str) -> tuple[int, ...]:

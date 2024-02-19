@@ -10,11 +10,11 @@ from abc import ABC, abstractmethod
 
 from nkeys import from_seed, KeyPair
 
-from jwt.nkeys_ext import create_account_pair, create_operator_pair, create_user_pair, keypair_from_pubkey
-from jwt.v2.account_claims import AccountClaims
-from jwt.v2.claims import AnyClaims, extract_payload_sig_from_jwt
-from jwt.v2.operator_claims import OperatorClaims
-from jwt.v2.user_claims import UserClaims
+from nats_jwt.nkeys_ext import create_account_pair, create_operator_pair, create_user_pair, keypair_from_pubkey
+from nats_jwt.v2.account_claims import AccountClaims
+from nats_jwt.v2.claims import AnyClaims, extract_payload_sig_from_jwt
+from nats_jwt.v2.operator_claims import OperatorClaims
+from nats_jwt.v2.user_claims import UserClaims
 
 
 JWT = t.Annotated[str, "Json Web Token"]

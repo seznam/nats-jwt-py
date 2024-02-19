@@ -3,14 +3,14 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 
-from jwt.v2.version import LIB_VERSION
-from jwt.v2.account_claims import AccountClaims
-from jwt.v2.claims import (
+from nats_jwt.v2.version import LIB_VERSION
+from nats_jwt.v2.account_claims import AccountClaims
+from nats_jwt.v2.claims import (
     AccountClaim, Claims, ClaimsData, ClaimType, GenericFields, OperatorClaim, safe_url_base64_decode, UserClaim
 )
-from jwt.v2.header import parse_headers
-from jwt.v2.operator_claims import OperatorClaims
-from jwt.v2.user_claims import UserClaims
+from nats_jwt.v2.header import parse_headers
+from nats_jwt.v2.operator_claims import OperatorClaims
+from nats_jwt.v2.user_claims import UserClaims
 
 
 @dataclass

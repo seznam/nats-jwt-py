@@ -8,11 +8,11 @@ import json
 import unittest
 from dataclasses import asdict, is_dataclass
 
-from jwt.nkeys_ext import create_operator_pair
-from jwt.v2.claims import ClaimsData, safe_url_base64_decode
-from jwt.v2.header import AlgorithmNkey, Header, TokenTypeJwt
-from jwt.v2.operator_claims import Operator
-from jwt.v2.snippets import Operator as OperatorSnippet
+from nats_jwt.nkeys_ext import create_operator_pair
+from nats_jwt.v2.claims import ClaimsData, safe_url_base64_decode
+from nats_jwt.v2.header import AlgorithmNkey, Header, TokenTypeJwt
+from nats_jwt.v2.operator_claims import Operator
+from nats_jwt.v2.snippets import Operator as OperatorSnippet
 
 
 class ClaimsDataTestCase(unittest.TestCase):
