@@ -17,9 +17,5 @@ Python's library for generating JWT tokens for NATS server.
 | `Tests`         |  ⚠️   | Tests not covering all code.                                                                                                             |
 | `Documentation` |  ℹ️   | NATS has powerful [documentation for JWT](https://docs.nats.io/running-a-nats-service/nats_admin/security/jwt). Recommended for reading. |
 
-## Contributing
-`TODOs` are in the code :)  
-Please use typing for code you write.
-
 ## LICENSE
 This library is licensed under the same LICENSE as the [NATS's go library](https://github.com/nats-io/jwt)
