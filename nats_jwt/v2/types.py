@@ -81,7 +81,7 @@ class Limits:
         )
 
 
-@dataclass(frozen=True)
+@dataclass
 class Permission:
     allow: list[str] = field(default_factory=list, metadata=_claim_data_config)
     deny: list[str] = field(default_factory=list, metadata=_claim_data_config)
@@ -109,7 +109,7 @@ class Permission:
             self.check_permission(vr, subj, permit_queue)
 
 
-@dataclass(frozen=True)
+@dataclass
 class ResponsePermission:
     max_msgs: int = field(default=0, metadata=_claim_data_config)
     expires: int = field(default=0, metadata=_claim_data_config)

@@ -13,7 +13,7 @@ class RevocationEntry:
     timestamp: int
 
 
-@dataclass(frozen=True)
+@dataclass
 class RevocationList(dict[str, int]):
     """ RevocationList is used to store a mapping of public keys to unix timestamps
     """
