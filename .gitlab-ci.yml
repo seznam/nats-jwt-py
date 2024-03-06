@@ -13,10 +13,6 @@ variables:
   BASE_CI_IMAGE_DOCKER_REGISTRY: docker.ops.iszn.cz
   BASE_CI_IMAGE_NAMESPACE: cdn/ci
 
-cache:
-  paths:
-    - .cache/pip
-
 include:
   - project: cdnko/tools/ci-scripts
     ref: master
