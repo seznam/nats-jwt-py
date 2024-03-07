@@ -20,7 +20,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.group.commitizen.dependencies]
-commitizen = "^3.6.0"
+commitizen = ">=3.15.0"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
