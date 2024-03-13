@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Final, TYPE_CHECKING
+from typing import Final, TYPE_CHECKING, Literal
 
 from dataclasses_json import config, dataclass_json
 from nkeys import nkeys
@@ -149,11 +149,72 @@ class OperatorLimits(Limits, AccountLimits, JetStreamLimits):
         return not self.is_empty()
 
 
+ExportType = Literal["stream", "service", "unknown"]
+
+
+@dataclass_json
+class Export:
+    name: str
+    subject: str
+    type: ExportType
+    token_req: bool = field(default_factory=bool, metadata=_claim_data_config)
+    revocations: RevocationList = field(default_factory=RevocationList)
+    response_type: Literal["Stream", "Chunked", "Singleton"] = field(default_factory=str, metadata=_claim_data_config)
+    response_threshold: int = field(default_factory=int, metadata=_claim_data_config)
+    account_token_position: int = field(default_factory=int, metadata=_claim_data_config)
+    advertise: bool = field(default_factory=bool, metadata=_claim_data_config)
+
+
+@dataclass
+class Import:
+    """ Import describes a mapping from another account into this one
+
+    Attributes:
+        name: Name of the import
+
+        subject: Subject field in an import is always from the perspective of the
+            initial publisher - in the case of a stream it is the account owning
+            the stream (the exporter), and in the case of a service it is the
+            account making the request (the importer).
+
+        account: Account to import from
+
+        token: Token to use for the import
+
+        to: Deprecated: use LocalSubject instead
+            To field in an import is always from the perspective of the subscriber
+            in the case of a stream it is the client of the stream (the importer),
+            from the perspective of a service, it is the subscription waiting for
+            requests (the exporter). If the field is empty, it will default to the
+            value in the Subject field.
+
+        local_subject: Local subject used to subscribe (for streams) and publish (for services) to.
+            This value only needs setting if you want to change the value of Subject.
+            If the value of Subject ends in > then LocalSubject needs to end in > as well.
+            LocalSubject can contain $<number> wildcard references where number references the nth wildcard in Subject.
+            The sum of wildcard reference and * tokens needs to match the number of * token in Subject.
+
+        type: Type of import
+
+        share: Share import with other accounts
+    """
+    name: str
+    subject: str
+    account: str
+    type: ExportType
+    token: str = field(default_factory=str, metadata=_claim_data_config)
+    to: str = field(default_factory=str, metadata=_claim_data_config)
+    local_subject: str = field(default_factory=str, metadata=_claim_data_config)
+    share: bool = field(default_factory=bool, metadata=_claim_data_config)
+
+
 @dataclass_json
 @dataclass
 class Account(GenericFields):
     """ Account holds account-specific claims data
     """
+    imports: list[Import] = field(default_factory=list, metadata=_claim_data_config)
+    exports: list[Export] = field(default_factory=list, metadata=_claim_data_config)
     limits: OperatorLimits = field(default_factory=OperatorLimits, metadata=_claim_data_config)
     signing_keys: SigningKeys = field(default_factory=SigningKeys, metadata=_claim_data_config)
     revocations: RevocationList = field(default_factory=RevocationList, metadata=_claim_data_config)
