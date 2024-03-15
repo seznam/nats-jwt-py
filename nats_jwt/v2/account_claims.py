@@ -153,6 +153,7 @@ ExportType = Literal["stream", "service", "unknown"]
 
 
 @dataclass_json
+@dataclass
 class Export:
     name: str
     subject: str
@@ -165,6 +166,7 @@ class Export:
     advertise: bool = field(default_factory=bool, metadata=_claim_data_config)
 
 
+@dataclass_json
 @dataclass
 class Import:
     """ Import describes a mapping from another account into this one
