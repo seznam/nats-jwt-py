@@ -157,7 +157,7 @@ ExportType = Literal["stream", "service", "unknown"]
 class Export:
     name: str
     subject: str
-    type: ExportType
+    type: ExportType = "stream"
     token_req: bool = field(default_factory=bool, metadata=_claim_data_config)
     revocations: RevocationList = field(default_factory=RevocationList)
     response_type: Literal["Stream", "Chunked", "Singleton"] = field(default_factory=str, metadata=_claim_data_config)
@@ -198,7 +198,7 @@ class Import:
 
         type: Type of import
 
-        share: Share import with other accounts
+        share: sharing information (for latency tracking), for type:`service` only
     """
     name: str
     subject: str

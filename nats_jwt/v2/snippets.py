@@ -8,7 +8,7 @@ Snippets help with creating, verifying and signing JWTs for NATS.
 import typing as t
 from abc import ABC, abstractmethod
 
-from nkeys import from_seed, KeyPair
+from nkeys import from_seed, KeyPair, nkeys
 
 from nats_jwt.nkeys_ext import create_account_pair, create_operator_pair, create_user_pair, keypair_from_pubkey
 from nats_jwt.v2.account_claims import AccountClaims
@@ -193,12 +193,15 @@ class Verifier:
         Returns:
             True if the JWT is signed by this entity, False otherwise
         """
-        if self.claims is None:
-            # if we can't get claims, we extract from jwt claims and signature to verify
-            return self.key_pair.verify(*extract_payload_sig_from_jwt(jwt))
+        try:
+            if self.claims is None:
+                # if we can't get claims, we extract from jwt claims and signature to verify
+                return self.key_pair.verify(*extract_payload_sig_from_jwt(jwt))
 
-        # if claims are set, we can verify with them
-        return self.claims.verify_jwt(jwt)
+            # if claims are set, we can verify with them
+            return self.claims.verify_jwt(jwt)
+        except nkeys.ErrInvalidSignature as e:
+            return False
 
 
 class Operator(Snippet, Verifier):
