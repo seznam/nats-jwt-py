@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "nats-jwt"
+version = "0.0.0"
+description = "JWT tokens signed using NKeys for Ed25519 for the Python3 ecosystem"
+authors = ["pomo <mark.barzali@firma.seznam.cz>"]
+license = "Apache-2.0 license"
+readme = "README.md"
+packages = [{include = "nats_jwt"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+nkeys = "^0.1.0"
+pycryptodome = "^3.20.0"
+pytz = "^2024.1"
+dataclasses-json = "^0.6.4"
+dacite = "^1.8.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.commitizen.dependencies]
+commitizen = ">=3.15.0"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version_provider = "poetry"
+tag_format = "v$version"
+bump_message = "🔖 version $current_version → $new_version [release]"
+update_changelog_on_bump = true
+annotated_tag = true
+
+
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.3"
+coverage = { version = "^7.3.2", extras = ["toml"] }
+swiftmock = "^0.0.1"
