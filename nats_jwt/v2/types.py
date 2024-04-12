@@ -14,18 +14,14 @@
 
 from __future__ import annotations
 
-import time
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import Final, TYPE_CHECKING
 
-import pytz
 
 from nats_jwt.v2.claims import _claim_data_config
 from nats_jwt.v2.common import NoLimit
 
 if TYPE_CHECKING:
-    from nats_jwt.v2.account_claims import NatsLimits
     from nats_jwt.v2.validation import ValidationResults
 
 MaxInfoLength: Final[int] = 8 * 1024
