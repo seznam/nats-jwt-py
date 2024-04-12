@@ -3,6 +3,8 @@ on:
     tags:
       - "v*.*.*"
 
+name: Release new version of the package
+
 jobs:
   release:
     runs-on: ubuntu-latest

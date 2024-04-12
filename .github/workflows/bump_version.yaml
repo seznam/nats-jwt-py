@@ -4,6 +4,8 @@ on:
       - main
     types: [closed]
 
+name: Bump version and create changelog
+
 jobs:
   bump_version:
     if: ${{ github.event.pull_request.merged }}
