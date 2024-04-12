@@ -1,3 +1,9 @@
+## v0.1.1 (2024-04-12)
+
+### Fix
+
+- remove unused imports
+
 ## v0.1.0 (2024-04-12)
 
 ### Feat
