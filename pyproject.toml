@@ -2,8 +2,8 @@
 name = "nats-jwt"
 version = "0.1.0"
 description = "JWT tokens signed using NKeys for Ed25519 for the Python3 ecosystem"
-authors = ["Seznam.cz, a.s. <doporucovani-vyvoj@firma.seznam.cz>"]
 license = "Apache-2.0 license"
+authors = ["Seznam.cz, a.s. <cdn.vyvoj@firma.seznam.cz>"]
 readme = "README.md"
 packages = [{include = "nats_jwt"}]
 
