@@ -1,35 +1,11 @@
 on:
   push:
-    branches: [main]
+    tags:
+      - "v*.*.*"
 
 jobs:
-  bump_version:
-    if: "!startsWith(github.event.head_commit.message, 'bump:')"
-    runs-on: ubuntu-latest
-    name: "Bump version and create changelog with commitizen"
-    steps:
-      - name: Check out
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
-      - id: cz
-        name: Create bump and changelog
-        uses: commitizen-tools/commitizen-action@master
-        continue-on-error: true
-        with:
-          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      - name: Print Version
-        run: echo "Bumped to version ${{ steps.cz.outputs.version }}"
-    outputs:
-      outcome: ${{ steps.cz.outcome }}
-      conclusion: ${{ steps.cz.conclusion }}
-
   release:
-    # if a bump version failed or was not executed, do not release
-    needs: bump_version
     runs-on: ubuntu-latest
-    if: needs.bump_version.outputs.outcome == 'success' || needs.bump_version.outputs.conclusion == 'success'
     steps:
     - name: Install Poetry
       uses: snok/install-poetry@v1

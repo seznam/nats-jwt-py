@@ -1,0 +1,25 @@
+on:
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+
+jobs:
+  bump_version:
+    if: ${{ github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+    name: "Bump version and create changelog with commitizen"
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
+      - id: cz
+        name: Create bump and changelog
+        uses: commitizen-tools/commitizen-action@master
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      - name: Print Version
+        run: echo "Bumped to version ${{ steps.cz.outputs.version }}"
