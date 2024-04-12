@@ -16,6 +16,7 @@ jobs:
       - id: cz
         name: Create bump and changelog
         uses: commitizen-tools/commitizen-action@master
+        continue-on-error: true
         with:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       - name: Print Version
@@ -25,6 +26,8 @@ jobs:
     # if a bump version failed or was not executed, do not release
     needs: bump_version
     runs-on: ubuntu-latest
+    if: |
+      needs.bump_version.steps.cz.outcome == 'success' && needs.bump_version.steps.cz.conclusion == 'success'
     steps:
     - name: Install Poetry
       uses: snok/install-poetry@v1
