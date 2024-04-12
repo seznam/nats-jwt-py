@@ -1,0 +1,38 @@
+on:
+  push:
+    branches: [main]
+
+jobs:
+  bump_version:
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    runs-on: ubuntu-latest
+    name: "Bump version and create changelog with commitizen"
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
+      - id: cz
+        name: Create bump and changelog
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      - name: Print Version
+        run: echo "Bumped to version ${{ steps.cz.outputs.version }}"
+
+  release:
+    # if a bump version failed or was not executed, do not release
+    needs: bump_version
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Publish package
+      run: | 
+        poetry publish -vvv \
+        --username ${{ secrets.PYPI_USERNAME }} \
+        --password ${{ secrets.PYPI_PASSWORD }} \
+        --build
