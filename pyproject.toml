@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nats-jwt"
-version = "0.1.0"
+version = "0.1.1"
 description = "NATS JWT tokens signed using NKeys for the Python3 ecosystem"
 authors = ["Seznam.cz, a.s. <cdn.vyvoj@firma.seznam.cz>"]
 license = "Apache-2.0"
@@ -29,6 +29,7 @@ tag_format = "v$version"
 bump_message = "🔖 version $current_version → $new_version [release]"
 update_changelog_on_bump = true
 annotated_tag = true
+
 
 
 
