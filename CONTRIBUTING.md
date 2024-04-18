@@ -13,3 +13,9 @@ What can you do?
 
 We appreciate any help.
 Thank you!
+
+## Commit convention
+
+Please follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) when creating a commit message.
+This repo is automated by `github actions` and [`commitzen`](https://commitizen-tools.github.io/commitizen/) to release
+new version of the library.
