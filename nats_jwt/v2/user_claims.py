@@ -17,7 +17,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Final
 
-import nkeys.nkeys
+import nkeys
 
 from nats_jwt.nkeys_ext import Decode
 from nats_jwt.v2.claims import _claim_data_config, ClaimsData, GenericFields, PrefixByte, UserClaim

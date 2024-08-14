@@ -19,7 +19,7 @@ from datetime import datetime
 from typing import Final, TYPE_CHECKING, Literal
 
 from dataclasses_json import config, dataclass_json
-from nkeys import nkeys
+import nkeys
 
 from nats_jwt.nkeys_ext import Decode
 from nats_jwt.v2.claims import _claim_data_config, AccountClaim, Claims, ClaimsData, GenericFields
