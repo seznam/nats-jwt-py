@@ -18,9 +18,8 @@ import base64
 import os
 import typing
 
-import ed25519
 import nkeys
-from ed25519 import VerifyingKey
+from nacl.signing import VerifyKey
 from nkeys import crc16
 
 if typing.TYPE_CHECKING:
@@ -46,8 +45,9 @@ class PublicKey:
     def __init__(self, pub_key: bytes):
         self.kp = pub_key
 
-    def get_verifying_key(self) -> VerifyingKey:
-        return VerifyingKey(self.kp)
+    @property
+    def verify_key(self) -> VerifyKey:
+        return VerifyKey(self.kp)
 
 
 def keypair_from_pubkey(pub_key: bytes) -> "nkeys.KeyPair":
@@ -149,10 +149,7 @@ def encode_seed(prefix: int, seed: bytes) -> bytes:
 def create_pair_with_rand(prefix: int, seed: bytes = None) -> nkeys.KeyPair:
     seed = seed or create_seed()
 
-    return nkeys.KeyPair(
-        seed=encode_seed(prefix, seed),
-        keys=ed25519.SigningKey(seed),
-    )
+    return nkeys.from_seed(encode_seed(prefix,seed))
 
 
 def create_operator_pair() -> nkeys.KeyPair:

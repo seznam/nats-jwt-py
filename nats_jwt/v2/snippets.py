@@ -22,7 +22,7 @@ Snippets help with creating, verifying and signing JWTs for NATS.
 import typing as t
 from abc import ABC, abstractmethod
 
-from nkeys import from_seed, KeyPair, nkeys
+from nkeys import from_seed, KeyPair, ErrInvalidSignature
 
 from nats_jwt.nkeys_ext import create_account_pair, create_operator_pair, create_user_pair, keypair_from_pubkey
 from nats_jwt.v2.account_claims import AccountClaims
@@ -214,7 +214,7 @@ class Verifier:
 
             # if claims are set, we can verify with them
             return self.claims.verify_jwt(jwt)
-        except nkeys.ErrInvalidSignature as e:
+        except ErrInvalidSignature as e:
             return False
 
 

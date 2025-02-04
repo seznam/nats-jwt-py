@@ -9,7 +9,7 @@ packages = [{include = "nats_jwt"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-nkeys = "^0.1.0"
+nkeys = "^0.2.1"
 pycryptodome = "^3.20.0"
 pytz = "^2024.1"
 dataclasses-json = "^0.6.4"

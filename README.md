@@ -26,7 +26,7 @@ _Code examples are using `snippets.py` which is not part of the go library._
 from nats_jwt.v2.snippets import Operator
 from nats_jwt.v2.account_claims import Export
 from nats_jwt.nkeys_ext import nkeys2
-from nkeys import nkeys
+import nkeys
 
 # create raw seed - 32 'random' bytes
 raw_seed: bytes = nkeys2.create_seed()
