@@ -1,3 +1,9 @@
+## v0.2.2 (2025-02-04)
+
+### Fix
+
+- update to nkey 0.2.1 by @pjennings chore: remove from test unused libraries
+
 ## v0.2.1 (2025-02-04)
 
 ### Fix
